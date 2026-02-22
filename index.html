@@ -151,6 +151,41 @@
 
         <!-- Main Grid -->
         <div class="main-grid">
+            
+
+            <!-- Audio Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span>🎵</span> Audio Analysis</div>
+                    <div class="card-subtitle">Breath pattern visualization</div>
+                </div>
+
+                <canvas id="waveCanvas"></canvas>
+
+                <div class="audio-stats">
+                    <div class="stat-box">
+                        <div class="label">Breath Consistency</div>
+                        <div class="value" id="breathConsTxt">—</div>
+                        <div class="bar">
+                            <div class="bar-fill" id="breathConsBar" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="label">Microphone Level</div>
+                        <div class="value" id="micLvl">—</div>
+                        <div class="bar">
+                            <div class="bar-fill" id="micLvlBar" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="audio-actions">
+                    <button id="muteBtn" class="btn btn-secondary btn-icon">🔈</button>
+                    <button id="refreshMics" class="btn btn-secondary btn-icon">🔄</button>
+                </div>
+            </div>
+
+
             <!-- Face Card -->
             <div class="card">
                 <div class="card-header">
@@ -192,39 +227,6 @@
                     <span>Faces: <span id="facesDetected">0</span></span>
                 </div>
             </div>
-
-            <!-- Audio Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title"><span>🎵</span> Audio Analysis</div>
-                    <div class="card-subtitle">Breath pattern visualization</div>
-                </div>
-
-                <canvas id="waveCanvas"></canvas>
-
-                <div class="audio-stats">
-                    <div class="stat-box">
-                        <div class="label">Breath Consistency</div>
-                        <div class="value" id="breathConsTxt">—</div>
-                        <div class="bar">
-                            <div class="bar-fill" id="breathConsBar" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="label">Microphone Level</div>
-                        <div class="value" id="micLvl">—</div>
-                        <div class="bar">
-                            <div class="bar-fill" id="micLvlBar" style="width:0%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="audio-actions">
-                    <button id="muteBtn" class="btn btn-secondary btn-icon">🔈</button>
-                    <button id="refreshMics" class="btn btn-secondary btn-icon">🔄</button>
-                </div>
-            </div>
-
             <!-- Breathing Card with REALISTIC 3D HEART -->
             <div class="card breathing-card">
                 <div class="card-header" style="width:100%;">
