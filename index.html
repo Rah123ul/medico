@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>MindFlow — Advanced Meditation Analytics</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="MindFlow - Your personal meditation analytics companion for mindful wellness">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,56 +16,64 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <link rel="stylesheet" href="styles.css" />
-
-    <style>
-        
-    </style>
+    
+    
 </head>
 
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <div class="container">
         <!-- Header -->
-        <div class="header">
+        <header role="banner">
             <div class="logo-section">
-                <div class="logo">🧘</div>
+                <div class="logo" aria-hidden="true">🧘</div>
                 <div>
                     <h1>MindFlow</h1>
-                    <div class="subtitle">Advanced Meditation Analytics Platform</div>
+                    <p class="subtitle">Your Personal Meditation Companion</p>
                 </div>
             </div>
-            <div style="display:flex;gap:0.5rem;">
-                <button id="exportCsv" class="btn btn-secondary"><span>📊</span> Export</button>
-                <button id="clearHistory" class="btn btn-secondary"><span>🗑️</span> Clear</button>
-            </div>
-        </div>
+            <nav aria-label="Primary actions">
+                <div style="display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center;">
+                    <button id="exportCsv" class="btn btn-secondary" aria-label="Export session history to CSV">
+                        <span aria-hidden="true">📊</span> Export
+                    </button>
+                    <button id="clearHistory" class="btn btn-secondary" aria-label="Clear all session history">
+                        <span aria-hidden="true">🗑️</span> Clear
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Welcome Message - Emotional Microcopy -->
+        <section class="welcome-message" aria-label="Welcome message">
+            <p class="greeting">Welcome back. Take a deep breath — you're in the right place.</p>
+            <p>Each moment of mindfulness is a gift to yourself. Let's begin your journey to inner calm.</p>
+        </section>
 
         <!-- Controls -->
-        <div class="controls-card">
+        <section class="controls-card" aria-label="Session controls">
             <!-- Row 1: Profile -->
-            <div class="controls"
-                style="margin-bottom: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">
+            <div class="controls" style="margin-bottom: 1.25rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1.25rem;">
                 <div class="control-group">
-                    <label>Full Name</label>
-                    <input type="text" id="userName" placeholder="Your Name"
-                        style="padding: 0.6rem; background: var(--bg-tertiary); border: 1px solid var(--glass-border); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.8rem; width: 180px;">
+                    <label for="userName">Full Name</label>
+                    <input type="text" id="userName" placeholder="Your Name" autocomplete="name">
                 </div>
                 <div class="control-group">
-                    <label>Age</label>
-                    <input type="number" id="userAge" placeholder="Age" min="1" max="120"
-                        style="padding: 0.6rem; background: var(--bg-tertiary); border: 1px solid var(--glass-border); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.8rem; width: 80px;">
+                    <label for="userAge">Age</label>
+                    <input type="number" id="userAge" placeholder="Age" min="1" max="120" style="width: 100px;">
                 </div>
                 <div class="control-group">
-                    <label>Gender</label>
-                    <select id="userGender"
-                        style="padding: 0.6rem; background: var(--bg-tertiary); border: 1px solid var(--glass-border); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.8rem; width: 100px;">
+                    <label for="userGender">Gender</label>
+                    <select id="userGender" style="width: 120px;">
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
                     </select>
                 </div>
                 <div class="control-group">
-                    <label>Skin Tone</label>
-                    <select id="userSkinTone" style="min-width: 120px;">
+                    <label for="userSkinTone">Skin Tone</label>
+                    <select id="userSkinTone" style="min-width: 140px;">
                         <option value="Type 1">Type 1 (Very Light)</option>
                         <option value="Type 2">Type 2 (Light)</option>
                         <option value="Type 3">Type 3 (Medium)</option>
@@ -74,33 +83,32 @@
                     </select>
                 </div>
 
-                <!-- ══════════ CIELAB TOGGLE (NEW) ══════════ -->
+                <!-- CIELAB Toggle -->
                 <div class="control-group" style="margin-left: auto;">
-                    <label>Skin Normalisation</label>
-                    <div class="cielab-toggle-wrap">
-                        <span class="cielab-icon">🔬</span>
+                    <label id="cielabLabel">Skin Normalisation</label>
+                    <div class="cielab-toggle-wrap" role="group" aria-labelledby="cielabLabel">
+                        <span class="cielab-icon" aria-hidden="true">🔬</span>
                         <div class="cielab-label-block">
                             <span class="cielab-title">CIELAB</span>
                             <span class="cielab-sub">Bias reduction</span>
                         </div>
                         <label class="cielab-switch">
-                            <input type="checkbox" id="cielabToggle" checked>
+                            <input type="checkbox" id="cielabToggle" checked aria-describedby="cielabStatus">
                             <span class="slider"></span>
                         </label>
-                        <span class="cielab-status-txt" id="cielabStatus">Active</span>
+                        <span class="cielab-status-txt" id="cielabStatus" aria-live="polite">Active</span>
                     </div>
                 </div>
-                <!-- ══════════════════════════════════════════ -->
             </div>
 
             <!-- Row 2: Mic / Breathing / Music / Actions -->
             <div class="controls">
                 <div class="control-group">
-                    <label>Microphone</label>
-                    <select id="micSelect"></select>
+                    <label for="micSelect">Microphone</label>
+                    <select id="micSelect" aria-label="Select microphone"></select>
                 </div>
                 <div class="control-group">
-                    <label>Breathing Cycles</label>
+                    <label for="breathCount">Breathing Cycles</label>
                     <select id="breathCount">
                         <option value="10">10 Cycles</option>
                         <option value="15" selected>15 Cycles</option>
@@ -109,7 +117,7 @@
                     </select>
                 </div>
                 <div class="control-group">
-                    <label>Background Music</label>
+                    <label for="musicSelect">Background Music</label>
                     <select id="musicSelect">
                         <option value="none">No Music</option>
                         <option value="assets/ohhm.mp3" selected>Calm Meditation (Local)</option>
@@ -122,78 +130,82 @@
                     </select>
                 </div>
                 <div class="control-group">
-                    <label>Music Volume</label>
-                    <div style="display:flex;align-items:center;gap:0.5rem;">
-                        <input type="range" id="musicVolume" min="0" max="100" value="30"
-                            style="width:120px;height:6px;background:var(--bg-tertiary);border-radius:var(--radius-full);cursor:pointer;">
-                        <span id="volumeLabel"
-                            style="font-size:0.75rem;color:var(--text-muted);min-width:35px;">30%</span>
+                    <label for="musicVolume">Music Volume</label>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <input type="range" id="musicVolume" min="0" max="100" value="30" 
+                               style="width:140px;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
+                        <span id="volumeLabel" style="font-size:0.9rem;color:var(--text-secondary);min-width:45px;">30%</span>
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <button id="allowMicBtn" class="btn btn-secondary"><span>🎤</span> Mic</button>
-                    <button id="allowCam" class="btn btn-secondary"><span>📷</span> Camera</button>
-                    <button id="startBtn" class="btn btn-primary"><span>▶️</span> Start</button>
-                    <button id="stopBtn" class="btn btn-secondary"><span>⏹</span> Stop</button>
+                    <button id="allowMicBtn" class="btn btn-secondary" aria-label="Enable microphone">
+                        <span aria-hidden="true">🎤</span> Mic
+                    </button>
+                    <button id="allowCam" class="btn btn-secondary" aria-label="Enable camera">
+                        <span aria-hidden="true">📷</span> Camera
+                    </button>
+                    <button id="startBtn" class="btn btn-primary" aria-label="Start meditation session">
+                        <span aria-hidden="true">▶️</span> Start
+                    </button>
+                    <button id="stopBtn" class="btn btn-secondary" aria-label="Stop meditation session">
+                        <span aria-hidden="true">⏹</span> Stop
+                    </button>
                 </div>
             </div>
 
             <!-- Status row -->
-            <div class="status-badge" id="statusBadge">
-                <span class="status-dot"></span>
-                <span id="sessionStatus">Idle</span>
-                <span id="musicLoading"
-                    style="display:none; margin-left:10px; font-size:0.6rem; color:var(--accent); font-weight:700;">⌛
-                    Loading Audio...</span>
+            <div class="status-badge" id="statusBadge" role="status" aria-live="polite">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span id="sessionStatus">Ready when you are</span>
+                <span id="musicLoading" style="display:none; margin-left:12px; font-size:0.75rem; color:var(--accent); font-weight:700;">
+                    ⌛ Loading Audio...
+                </span>
                 <audio id="bgAudio" loop preload="auto" crossorigin="anonymous"></audio>
             </div>
-        </div>
+        </section>
 
         <!-- Main Grid -->
-        <div class="main-grid">
-            
-
+        <main id="main-content" role="main">
             <!-- Audio Card -->
-            <div class="card">
+            <article class="card" aria-labelledby="audio-title">
                 <div class="card-header">
-                    <div class="card-title"><span>🎵</span> Audio Analysis</div>
-                    <div class="card-subtitle">Breath pattern visualization</div>
+                    <h2 class="card-title" id="audio-title"><span aria-hidden="true">🎵</span> Audio Analysis</h2>
+                    <p class="card-subtitle">Watch your breath patterns flow like gentle waves</p>
                 </div>
 
-                <canvas id="waveCanvas"></canvas>
+                <canvas id="waveCanvas" aria-label="Audio waveform visualization"></canvas>
 
                 <div class="audio-stats">
                     <div class="stat-box">
                         <div class="label">Breath Consistency</div>
-                        <div class="value" id="breathConsTxt">—</div>
-                        <div class="bar">
+                        <div class="value" id="breathConsTxt" aria-live="polite">—</div>
+                        <div class="bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <div class="bar-fill" id="breathConsBar" style="width:0%"></div>
                         </div>
                     </div>
                     <div class="stat-box">
                         <div class="label">Microphone Level</div>
-                        <div class="value" id="micLvl">—</div>
-                        <div class="bar">
+                        <div class="value" id="micLvl" aria-live="polite">—</div>
+                        <div class="bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <div class="bar-fill" id="micLvlBar" style="width:0%"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="audio-actions">
-                    <button id="muteBtn" class="btn btn-secondary btn-icon">🔈</button>
-                    <button id="refreshMics" class="btn btn-secondary btn-icon">🔄</button>
+                    <button id="muteBtn" class="btn btn-secondary btn-icon" aria-label="Mute audio">🔈</button>
+                    <button id="refreshMics" class="btn btn-secondary btn-icon" aria-label="Refresh microphone list">🔄</button>
                 </div>
-            </div>
-
+            </article>
 
             <!-- Face Card -->
-            <div class="card">
+            <article class="card" aria-labelledby="face-title">
                 <div class="card-header">
-                    <div class="card-title"><span>👁️</span> Facial Analysis</div>
-                    <div class="card-subtitle">Real-time meditation state detection</div>
+                    <h2 class="card-title" id="face-title"><span aria-hidden="true">👁️</span> Facial Analysis</h2>
+                    <p class="card-subtitle">Your face tells a story of serenity</p>
                 </div>
 
-                <div id="faceWrap">
+                <div id="faceWrap" role="img" aria-label="Live camera feed with facial analysis overlay">
                     <video class="input_video" autoplay playsinline muted></video>
                     <canvas class="output_canvas"></canvas>
                 </div>
@@ -201,48 +213,51 @@
                 <div class="metrics-row">
                     <div class="metric-box">
                         <div class="label">Eye Relaxation</div>
-                        <div class="value" id="eyeScoreTxt">0%</div>
-                        <div class="bar">
+                        <div class="value" id="eyeScoreTxt" aria-live="polite">0%</div>
+                        <div class="bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <div class="bar-fill" id="eyeBar" style="width:0%"></div>
                         </div>
                     </div>
                     <div class="metric-box">
                         <div class="label">Head Steady</div>
-                        <div class="value" id="headScoreTxt">0%</div>
-                        <div class="bar">
+                        <div class="value" id="headScoreTxt" aria-live="polite">0%</div>
+                        <div class="bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <div class="bar-fill" id="headBar" style="width:0%"></div>
                         </div>
                     </div>
                     <div class="metric-box">
                         <div class="label">Gaze Stable</div>
-                        <div class="value" id="gazeScoreTxt">0%</div>
-                        <div class="bar">
+                        <div class="value" id="gazeScoreTxt" aria-live="polite">0%</div>
+                        <div class="bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <div class="bar-fill" id="gazeBar" style="width:0%"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="info-footer">
-                    <span>FPS: <span id="fps">—</span></span>
-                    <span>Faces: <span id="facesDetected">0</span></span>
+                    <span>FPS: <span id="fps" aria-live="polite">—</span></span>
+                    <span>Faces: <span id="facesDetected" aria-live="polite">0</span></span>
                 </div>
-            </div>
-            <!-- Breathing Card with REALISTIC 3D HEART -->
-            <div class="card breathing-card">
+            </article>
+
+            <!-- Breathing Card with Heart -->
+            <article class="card breathing-card" aria-labelledby="breathing-title">
                 <div class="card-header" style="width:100%;">
-                    <div class="card-title"><span>💨</span> Breathing Guide</div>
-                    <div class="card-subtitle">Follow the rhythm</div>
+                    <h2 class="card-title" id="breathing-title"><span aria-hidden="true">💨</span> Breathing Guide</h2>
+                    <p class="card-subtitle">Let your breath guide you to peace</p>
                 </div>
 
-                <div class="heart-container">
+                <div class="heart-container" aria-hidden="true">
                     <div id="breathingCircle" class="breathing-circle"></div>
                 </div>
 
-                <div id="breathStatus" class="breath-status">Ready to begin</div>
+                <div id="breathStatus" class="breath-status" role="status" aria-live="polite">
+                    Take a moment. You deserve this peace.
+                </div>
 
                 <div class="progress-section">
                     <div class="label">Session Progress</div>
-                    <div class="progress-bar-lg">
+                    <div class="progress-bar-lg" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Session progress">
                         <div class="fill" id="sessionMeter" style="width:0%"></div>
                     </div>
                 </div>
@@ -250,138 +265,207 @@
                 <div class="rppg-panel">
                     <div class="rppg-header">
                         <div class="rppg-title">❤️ Heart Rate Monitor</div>
-                        <div class="bpm-value" id="bpmDisplay">— BPM</div>
+                        <div class="bpm-value" id="bpmDisplay" aria-live="polite">— BPM</div>
                     </div>
 
                     <div class="rppg-stats">
                         <div class="rppg-stat">
                             <div class="label">Heart Rate</div>
                             <div class="value" id="heartrateTxt">0 bpm</div>
-                            <div class="bar">
+                            <div class="bar" role="progressbar" aria-valuenow="0">
                                 <div class="bar-fill" id="heartrateBar" style="width:0%"></div>
                             </div>
                         </div>
                         <div class="rppg-stat">
                             <div class="label">SDNN</div>
                             <div class="value" id="sdnnTxt">0 ms</div>
-                            <div class="bar">
+                            <div class="bar" role="progressbar" aria-valuenow="0">
                                 <div class="bar-fill" id="sdnnBar" style="width:0%"></div>
                             </div>
                         </div>
                         <div class="rppg-stat">
                             <div class="label">RMSSD</div>
                             <div class="value" id="rmssdTxt">0 ms</div>
-                            <div class="bar">
+                            <div class="bar" role="progressbar" aria-valuenow="0">
                                 <div class="bar-fill" id="rmssdBar" style="width:0%"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Signal Quality Indicator (New) -->
-                <div
-                    style="margin-top: 1rem; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: var(--radius-sm);">
-                    <div
-                        style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.3rem; color: var(--text-secondary);">
-                        <span>Signal Quality</span>
-                        <span id="signalQualityTxt">Waiting...</span>
-                    </div>
-                    <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
-                        <div id="signalQualityBar"
-                            style="width: 0%; height: 100%; background: var(--warning); transition: width 0.3s ease, background 0.3s ease;">
+                    <!-- Signal Quality -->
+                    <div style="margin-top: 1rem; background: rgba(0,0,0,0.25); padding: 0.75rem; border-radius: var(--radius-sm);">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--text-secondary);">
+                            <span>Signal Quality</span>
+                            <span id="signalQualityTxt" aria-live="polite">Waiting...</span>
+                        </div>
+                        <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                            <div id="signalQualityBar" style="width: 0%; height: 100%; background: var(--warning); transition: width 0.3s ease, background 0.3s ease;"></div>
                         </div>
                     </div>
+
+                    <p class="rppg-tip">💡 Stay still in good lighting for best results</p>
+                </div>
+            </article>
+        </main>
+
+        <!-- Results Section -->
+        <section class="results-card" aria-labelledby="results-title">
+            <h2 class="card-title" id="results-title"><span aria-hidden="true">📊</span> Session Results</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">
+                Every session is a step forward on your wellness journey
+            </p>
+
+            <div class="results-grid">
+                <div class="result-box">
+                    <div class="header">
+                        <div class="label">Face Calmness</div>
+                        <div class="value" id="faceCalmTxt" aria-live="polite">—</div>
+                    </div>
+                    <div class="bar" role="progressbar" aria-valuenow="0">
+                        <div class="bar-fill" id="faceCalmBar" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="result-box">
+                    <div class="header">
+                        <div class="label">Breath Consistency</div>
+                        <div class="value" id="breathConsTxt2" aria-live="polite">—</div>
+                    </div>
+                    <div class="bar" role="progressbar" aria-valuenow="0">
+                        <div class="bar-fill" id="breathConsBar2" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="result-box">
+                    <div class="header">
+                        <div class="label">Meditation Index</div>
+                        <div class="value" id="meditationIndexTxt" aria-live="polite">—</div>
+                    </div>
+                    <div class="bar" role="progressbar" aria-valuenow="0">
+                        <div class="bar-fill" id="meditationIndexBar" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="result-box">
+                    <div class="header">
+                        <div class="label">Overall Score</div>
+                        <div class="value" id="overallTxt" aria-live="polite">—</div>
+                    </div>
+                    <div class="bar" role="progressbar" aria-valuenow="0">
+                        <div class="bar-fill" id="overallBar" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overall-note" id="overallNote" role="status" aria-live="polite"></div>
+        </section>
+
+        <!-- Wellness Section -->
+        <section class="wellness-section" aria-label="Wellness insights">
+
+            <!-- Stability Score Card -->
+            <article class="wellness-card" aria-labelledby="stability-title">
+                <h3 id="stability-title">🧠 Stability Score</h3>
+
+                <div class="stability-ring-wrap">
+                    <div class="stability-ring" aria-hidden="true">
+                        <svg width="90" height="90" viewBox="0 0 90 90">
+                            <defs>
+                                <linearGradient id="stabilityGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#14b8a6"/>
+                                    <stop offset="100%" style="stop-color:#d97706"/>
+                                </linearGradient>
+                            </defs>
+                            <circle class="ring-bg" cx="45" cy="45" r="40"/>
+                            <circle class="ring-fill" id="stabilityRingFill" cx="45" cy="45" r="40"/>
+                        </svg>
+                        <div class="stability-ring-label" id="stabilityRingLabel">—</div>
+                    </div>
+                    <div class="stability-info">
+                        <div id="stabilityScore" aria-live="polite">--</div>
+                        <p id="stabilityMessage">Complete a session to discover your inner stability.</p>
+                    </div>
                 </div>
 
-                <div class="rppg-tip">💡 Keep steady and maintain good lighting</div>
-            </div>
-        </div>
-    </div>
+                <!-- Stability Streak Display -->
+                <p id="streakDisplay" aria-live="polite"></p>
 
-    <!-- Results -->
-    <div class="results-card">
-        <div class="card-title"><span>📊</span> Session Results</div>
+                <!-- Confidence Level Card -->
+                <div class="confidence-card" aria-labelledby="confidence-label">
+                    <div class="confidence-header">
+                        <span class="confidence-label" id="confidence-label">Confidence Level</span>
+                        <span class="confidence-value" id="confidenceValue" aria-live="polite">—</span>
+                    </div>
+                    <p class="confidence-message" id="confidenceMessage">
+                        As you practice more, your confidence in mindfulness will naturally grow.
+                    </p>
+                </div>
+            </article>
 
-        <div class="results-grid">
-            <div class="result-box">
-                <div class="header">
-                    <div class="label">Face Calmness</div>
-                    <div class="value" id="faceCalmTxt">—</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-fill" id="faceCalmBar" style="width:0%"></div>
-                </div>
-            </div>
-            <div class="result-box">
-                <div class="header">
-                    <div class="label">Breath Consistency</div>
-                    <div class="value" id="breathConsTxt2">—</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-fill" id="breathConsBar2" style="width:0%"></div>
-                </div>
-            </div>
-            <div class="result-box">
-                <div class="header">
-                    <div class="label">Meditation Index</div>
-                    <div class="value" id="meditationIndexTxt">—</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-fill" id="meditationIndexBar" style="width:0%"></div>
-                </div>
-            </div>
-            <div class="result-box">
-                <div class="header">
-                    <div class="label">Overall Score</div>
-                    <div class="value" id="overallTxt">—</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-fill" id="overallBar" style="width:0%"></div>
-                </div>
-            </div>
-        </div>
+            <!-- 7-Day Growth Outlook Card -->
+            <article class="wellness-card" aria-labelledby="forecast-title">
+                <h3 id="forecast-title">📈 7-Day Growth Outlook</h3>
 
-        <div class="overall-note" id="overallNote"></div>
-    </div>
+                <div id="weeklyForecast" aria-live="polite">
+                    Your wellness journey is unique. Complete a few more sessions to see your personalized growth forecast.
+                </div>
 
-    <!-- History -->
-    <div class="history-card">
-        <div class="card-title"><span>📈</span> Session History</div>
-        <table class="history-table">
-           <thead>
-  <tr>
-    <th>Date & Time</th>
-    <th>User Name</th>
-    <th>Profile (Age/Tone)</th>
-    <th>Duration</th>        
-    <th>BPM</th>             
-    <th>Face</th>
-    <th>Breath</th>
-    <th>Meditation</th>
-    <th>Overall</th>
-  </tr>
-</thead>
-            <tbody id="historyBody"></tbody>
-        </table>
-    </div>
-    <!-- Authenticity & Privacy Footer -->
-    <div
-        style="margin-top: 3rem; text-align: center; color: var(--text-secondary); font-size: 0.8rem; padding-bottom: 2rem;">
-        <div
-            style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(16, 185, 129, 0.1); padding: 0.5rem 1rem; border-radius: 999px; margin-bottom: 1rem; border: 1px solid rgba(16, 185, 129, 0.2);">
-            <span>🔒</span>
-            <strong>Privacy First:</strong> All analysis happens locally on your device. No video data is sent to
-            the cloud.
-        </div>
-        <p style="max-width: 600px; margin: 0 auto; line-height: 1.6;">
-            <strong>Disclaimer:</strong> This application is a wellness tool designed for relaxation and meditation.
-            It is <em>not</em> a medical device and should not be used for diagnosis or treatment.
-            Heart rate and HRV metrics are estimates based on optical processing throughout the session.
-        </p>
-    </div>
+                <!-- Mini bar chart -->
+                <div id="forecastBarsWrap" style="display:none; margin-top: 1.25rem;" aria-hidden="true">
+                    <div class="forecast-mini-bars" id="forecastBars"></div>
+                    <div class="forecast-trend-label">
+                        <span>Past sessions</span>
+                        <span style="color:var(--accent);">Projected ↗</span>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- History Section -->
+        <section class="history-card" aria-labelledby="history-title">
+            <h2 class="card-title" id="history-title"><span aria-hidden="true">📈</span> Session History</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">
+                Each session is a chapter in your mindfulness story
+            </p>
+            <div style="overflow-x: auto;">
+                <table class="history-table" aria-label="Meditation session history">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date & Time</th>
+                            <th scope="col">User Name</th>
+                            <th scope="col">Profile</th>
+                            <th scope="col">Duration</th>
+                            <th scope="col">BPM</th>
+                            <th scope="col">Face</th>
+                            <th scope="col">Breath</th>
+                            <th scope="col">Meditation</th>
+                            <th scope="col">Overall</th>
+                            <th scope="col">Stability</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer role="contentinfo">
+            <div class="privacy-badge">
+                <span aria-hidden="true">🔒</span>
+                <strong>Privacy First:</strong> All analysis happens locally on your device.
+            </div>
+            <div class="disclaimer">
+                <p>
+                    <strong>Wellness Disclaimer:</strong> MindFlow is designed to support your relaxation and meditation practice.
+                    It is <em>not</em> a medical device and should not be used for diagnosis or treatment.
+                    Heart rate and HRV metrics are estimates based on optical processing.
+                    Always consult healthcare professionals for medical advice.
+                </p>
+            </div>
+        </footer>
     </div>
 
     <script src="app.js"></script>
     <script>
+        // Status badge animation
         const statusBadge = document.getElementById('statusBadge');
         const sessionStatus = document.getElementById('sessionStatus');
         const originalTextContent = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
@@ -392,6 +476,25 @@
             },
             get: function () { return originalTextContent.get.call(this); }
         });
+
+        // Volume slider live update
+        const volumeSlider = document.getElementById('musicVolume');
+        const volumeLabel = document.getElementById('volumeLabel');
+        if (volumeSlider && volumeLabel) {
+            volumeSlider.addEventListener('input', function() {
+                volumeLabel.textContent = this.value + '%';
+                this.setAttribute('aria-valuenow', this.value);
+            });
+        }
+
+        // CIELAB toggle status update
+        const cielabToggle = document.getElementById('cielabToggle');
+        const cielabStatus = document.getElementById('cielabStatus');
+        if (cielabToggle && cielabStatus) {
+            cielabToggle.addEventListener('change', function() {
+                cielabStatus.textContent = this.checked ? 'Active' : 'Off';
+            });
+        }
     </script>
 </body>
 
