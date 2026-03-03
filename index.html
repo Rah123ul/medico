@@ -1,396 +1,623 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <title>MindFlow — Advanced Meditation Analytics</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-        rel="stylesheet">
-
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-    <link rel="stylesheet" href="styles.css" />
-
-    <style>
-        
-    </style>
+  <meta charset="utf-8"/>
+  <title>MindFlow - Neural Meditation Interface</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
-
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo-section">
-                <div class="logo">🧘</div>
-                <div>
-                    <h1>MindFlow</h1>
-                    <div class="subtitle">Advanced Meditation Analytics Platform</div>
-                </div>
-            </div>
-            <div style="display:flex;gap:0.5rem;">
-                <button id="exportCsv" class="btn btn-secondary"><span>📊</span> Export</button>
-                <button id="clearHistory" class="btn btn-secondary"><span>🗑️</span> Clear</button>
-            </div>
-        </div>
 
-        <!-- Controls -->
-        <div class="controls-card">
-            <!-- Row 1: Profile -->
-            <div class="controls"
-                style="margin-bottom: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;">
-                <div class="control-group">
-                    <label>Full Name</label>
-                    <input type="text" id="userName" placeholder="Your Name"
-                        style="padding: 0.6rem; background: var(--bg-tertiary); border: 1px solid var(--glass-border); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.8rem; width: 180px;">
-                </div>
-                <div class="control-group">
-                    <label>Age</label>
-                    <input type="number" id="userAge" placeholder="Age" min="1" max="120"
-                        style="padding: 0.6rem; background: var(--bg-tertiary); border: 1px solid var(--glass-border); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.8rem; width: 80px;">
-                </div>
-                <div class="control-group">
-                    <label>Gender</label>
-                    <select id="userGender"
-                        style="padding: 0.6rem; background: var(--bg-tertiary); border: 1px solid var(--glass-border); border-radius: var(--radius-md); color: var(--text-primary); font-size: 0.8rem; width: 100px;">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label>Skin Tone</label>
-                    <select id="userSkinTone" style="min-width: 120px;">
-                        <option value="Type 1">Type 1 (Very Light)</option>
-                        <option value="Type 2">Type 2 (Light)</option>
-                        <option value="Type 3">Type 3 (Medium)</option>
-                        <option value="Type 4">Type 4 (Olive/Tan)</option>
-                        <option value="Type 5">Type 5 (Dark Brown)</option>
-                        <option value="Type 6">Type 6 (Black)</option>
-                    </select>
-                </div>
-
-                <!-- ══════════ CIELAB TOGGLE (NEW) ══════════ -->
-                <div class="control-group" style="margin-left: auto;">
-                    <label>Skin Normalisation</label>
-                    <div class="cielab-toggle-wrap">
-                        <span class="cielab-icon">🔬</span>
-                        <div class="cielab-label-block">
-                            <span class="cielab-title">CIELAB</span>
-                            <span class="cielab-sub">Bias reduction</span>
-                        </div>
-                        <label class="cielab-switch">
-                            <input type="checkbox" id="cielabToggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                        <span class="cielab-status-txt" id="cielabStatus">Active</span>
-                    </div>
-                </div>
-                <!-- ══════════════════════════════════════════ -->
-            </div>
-
-            <!-- Row 2: Mic / Breathing / Music / Actions -->
-            <div class="controls">
-                <div class="control-group">
-                    <label>Microphone</label>
-                    <select id="micSelect"></select>
-                </div>
-                <div class="control-group">
-                    <label>Breathing Cycles</label>
-                    <select id="breathCount">
-                        <option value="10">10 Cycles</option>
-                        <option value="15" selected>15 Cycles</option>
-                        <option value="20">20 Cycles</option>
-                        <option value="25">25 Cycles</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label>Background Music</label>
-                    <select id="musicSelect">
-                        <option value="none">No Music</option>
-                        <option value="assets/ohhm.mp3" selected>Calm Meditation (Local)</option>
-                        <option value="assets/deep_relaxation.mp3">Deep Relaxation
-                        </option>
-                        <option value="https://cdn.pixabay.com/audio/2022/08/23/audio_2e6d339bcc.mp3">Peaceful Zen
-                        </option>
-                        <option value="https://cdn.pixabay.com/audio/2023/02/28/audio_4dfed6d6c1.mp3">Nature Sounds
-                        </option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label>Music Volume</label>
-                    <div style="display:flex;align-items:center;gap:0.5rem;">
-                        <input type="range" id="musicVolume" min="0" max="100" value="30"
-                            style="width:120px;height:6px;background:var(--bg-tertiary);border-radius:var(--radius-full);cursor:pointer;">
-                        <span id="volumeLabel"
-                            style="font-size:0.75rem;color:var(--text-muted);min-width:35px;">30%</span>
-                    </div>
-                </div>
-                <div class="action-buttons">
-                    <button id="allowMicBtn" class="btn btn-secondary"><span>🎤</span> Mic</button>
-                    <button id="allowCam" class="btn btn-secondary"><span>📷</span> Camera</button>
-                    <button id="startBtn" class="btn btn-primary"><span>▶️</span> Start</button>
-                    <button id="stopBtn" class="btn btn-secondary"><span>⏹</span> Stop</button>
-                </div>
-            </div>
-
-            <!-- Status row -->
-            <div class="status-badge" id="statusBadge">
-                <span class="status-dot"></span>
-                <span id="sessionStatus">Idle</span>
-                <span id="musicLoading"
-                    style="display:none; margin-left:10px; font-size:0.6rem; color:var(--accent); font-weight:700;">⌛
-                    Loading Audio...</span>
-                <audio id="bgAudio" loop preload="auto" crossorigin="anonymous"></audio>
-            </div>
-        </div>
-
-        <!-- Main Grid -->
-        <div class="main-grid">
-            <!-- Face Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title"><span>👁️</span> Facial Analysis</div>
-                    <div class="card-subtitle">Real-time meditation state detection</div>
-                </div>
-
-                <div id="faceWrap">
-                    <video class="input_video" autoplay playsinline muted></video>
-                    <canvas class="output_canvas"></canvas>
-                </div>
-
-                <div class="metrics-row">
-                    <div class="metric-box">
-                        <div class="label">Eye Relaxation</div>
-                        <div class="value" id="eyeScoreTxt">0%</div>
-                        <div class="bar">
-                            <div class="bar-fill" id="eyeBar" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="label">Head Steady</div>
-                        <div class="value" id="headScoreTxt">0%</div>
-                        <div class="bar">
-                            <div class="bar-fill" id="headBar" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="label">Gaze Stable</div>
-                        <div class="value" id="gazeScoreTxt">0%</div>
-                        <div class="bar">
-                            <div class="bar-fill" id="gazeBar" style="width:0%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-footer">
-                    <span>FPS: <span id="fps">—</span></span>
-                    <span>Faces: <span id="facesDetected">0</span></span>
-                </div>
-            </div>
-
-            <!-- Audio Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title"><span>🎵</span> Audio Analysis</div>
-                    <div class="card-subtitle">Breath pattern visualization</div>
-                </div>
-
-                <canvas id="waveCanvas"></canvas>
-
-                <div class="audio-stats">
-                    <div class="stat-box">
-                        <div class="label">Breath Consistency</div>
-                        <div class="value" id="breathConsTxt">—</div>
-                        <div class="bar">
-                            <div class="bar-fill" id="breathConsBar" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="label">Microphone Level</div>
-                        <div class="value" id="micLvl">—</div>
-                        <div class="bar">
-                            <div class="bar-fill" id="micLvlBar" style="width:0%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="audio-actions">
-                    <button id="muteBtn" class="btn btn-secondary btn-icon">🔈</button>
-                    <button id="refreshMics" class="btn btn-secondary btn-icon">🔄</button>
-                </div>
-            </div>
-
-            <!-- Breathing Card with REALISTIC 3D HEART -->
-            <div class="card breathing-card">
-                <div class="card-header" style="width:100%;">
-                    <div class="card-title"><span>💨</span> Breathing Guide</div>
-                    <div class="card-subtitle">Follow the rhythm</div>
-                </div>
-
-                <div class="heart-container">
-                    <div id="breathingCircle" class="breathing-circle"></div>
-                </div>
-
-                <div id="breathStatus" class="breath-status">Ready to begin</div>
-
-                <div class="progress-section">
-                    <div class="label">Session Progress</div>
-                    <div class="progress-bar-lg">
-                        <div class="fill" id="sessionMeter" style="width:0%"></div>
-                    </div>
-                </div>
-
-                <div class="rppg-panel">
-                    <div class="rppg-header">
-                        <div class="rppg-title">❤️ Heart Rate Monitor</div>
-                        <div class="bpm-value" id="bpmDisplay">— BPM</div>
-                    </div>
-
-                    <div class="rppg-stats">
-                        <div class="rppg-stat">
-                            <div class="label">Heart Rate</div>
-                            <div class="value" id="heartrateTxt">0 bpm</div>
-                            <div class="bar">
-                                <div class="bar-fill" id="heartrateBar" style="width:0%"></div>
-                            </div>
-                        </div>
-                        <div class="rppg-stat">
-                            <div class="label">SDNN</div>
-                            <div class="value" id="sdnnTxt">0 ms</div>
-                            <div class="bar">
-                                <div class="bar-fill" id="sdnnBar" style="width:0%"></div>
-                            </div>
-                        </div>
-                        <div class="rppg-stat">
-                            <div class="label">RMSSD</div>
-                            <div class="value" id="rmssdTxt">0 ms</div>
-                            <div class="bar">
-                                <div class="bar-fill" id="rmssdBar" style="width:0%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Signal Quality Indicator (New) -->
-                <div
-                    style="margin-top: 1rem; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: var(--radius-sm);">
-                    <div
-                        style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.3rem; color: var(--text-secondary);">
-                        <span>Signal Quality</span>
-                        <span id="signalQualityTxt">Waiting...</span>
-                    </div>
-                    <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
-                        <div id="signalQualityBar"
-                            style="width: 0%; height: 100%; background: var(--warning); transition: width 0.3s ease, background 0.3s ease;">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="rppg-tip">💡 Keep steady and maintain good lighting</div>
-            </div>
-        </div>
+<!-- ═══ BOOT OVERLAY ═══ -->
+<div id="bootOverlay">
+  <div class="boot-inner">
+    <div class="boot-logo">
+      <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="28" stroke="#00f5d4" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <circle cx="30" cy="30" r="20" stroke="#00f5d4" stroke-width="0.8" opacity="0.5"/>
+        <path d="M30 12 L30 48 M12 30 L48 30" stroke="#00f5d4" stroke-width="0.6" opacity="0.3"/>
+        <circle cx="30" cy="30" r="5" fill="#00f5d4"/>
+      </svg>
     </div>
+    <div class="boot-title" id="bootTitle"></div>
+    <div class="boot-log" id="bootLog"></div>
+    <div class="boot-bar"><div class="boot-fill" id="bootFill"></div></div>
+  </div>
+</div>
 
-    <!-- Results -->
-    <div class="results-card">
-        <div class="card-title"><span>📊</span> Session Results</div>
+<!-- ═══ BACKGROUND ═══ -->
+<div class="hud-grid" aria-hidden="true"></div>
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
+<div class="scanlines" aria-hidden="true"></div>
+<div class="screen-corner sc-tl"></div>
+<div class="screen-corner sc-tr"></div>
+<div class="screen-corner sc-bl"></div>
+<div class="screen-corner sc-br"></div>
 
+<div class="app-shell">
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="hud-header" id="hudHeader">
+    <div class="hud-header-left">
+      <div class="header-sys-id">
+        <span class="sys-label">SYS</span>
+        <span class="sys-code">MF-7734</span>
+      </div>
+      <div class="header-brand">
+        <span class="brand-name">MINDFLOW</span>
+        <span class="brand-sub">NEURAL MEDITATION INTERFACE v3.2</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="hud-clock" id="hudClock">00:00:00</div>
+      <div class="header-status-row">
+        <div class="sys-stat sys-stat--online"><span class="blink-dot"></span>NEURAL LINK</div>
+        <div class="sys-stat" id="camStat"><span class="blink-dot off"></span>OPTICS</div>
+        <div class="sys-stat" id="micStat"><span class="blink-dot off"></span>AUDIO</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="exportCsv" class="hud-btn hud-btn--ghost">
+        <span class="btn-bracket">[</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        EXPORT<span class="btn-bracket">]</span>
+      </button>
+      <button id="clearHistory" class="hud-btn hud-btn--ghost">
+        <span class="btn-bracket">[</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        PURGE<span class="btn-bracket">]</span>
+      </button>
+      <div class="status-module" id="statusBadge">
+        <div class="status-ring"><div class="status-ring-inner"></div></div>
+        <span id="sessionStatus">STANDBY</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-shell">
+
+    <!-- ═══ CONTROLS ═══ -->
+    <section class="hud-panel controls-panel" data-hud-label="SESSION CONFIGURATION">
+      <div class="hud-panel-inner">
+        <div class="ctrl-row ctrl-row--profile">
+          <div class="hud-field">
+            <label class="hud-label" for="userName">OPERATOR ID</label>
+            <input type="text" id="userName" class="hud-input" placeholder="ENTER NAME" autocomplete="name"/>
+          </div>
+          <div class="hud-field hud-field--xs">
+            <label class="hud-label" for="userAge">AGE</label>
+            <input type="number" id="userAge" class="hud-input" placeholder="__" min="1" max="120"/>
+          </div>
+          <div class="hud-field hud-field--xs">
+            <label class="hud-label" for="userGender">GENDER</label>
+            <select id="userGender" class="hud-select">
+              <option value="male">MALE</option>
+              <option value="female">FEMALE</option>
+              <option value="other">OTHER</option>
+            </select>
+          </div>
+          <div class="hud-field">
+            <label class="hud-label" for="userSkinTone">SKIN PROFILE</label>
+            <select id="userSkinTone" class="hud-select">
+              <option value="Type 1">TYPE I - VERY LIGHT</option>
+              <option value="Type 2">TYPE II - LIGHT</option>
+              <option value="Type 3">TYPE III - MEDIUM</option>
+              <option value="Type 4">TYPE IV - OLIVE</option>
+              <option value="Type 5">TYPE V - DARK BROWN</option>
+              <option value="Type 6">TYPE VI - BLACK</option>
+            </select>
+          </div>
+          <div class="cielab-module" title="CIELAB skin normalisation">
+            <div class="cielab-glyph">&#9672;</div>
+            <div class="cielab-text">
+              <span class="cielab-title">CIELAB</span>
+              <span class="cielab-sub">BIAS REDUCTION</span>
+            </div>
+            <label class="circuit-toggle" aria-label="Toggle CIELAB">
+              <input type="checkbox" id="cielabToggle" checked>
+              <span class="ct-track"><span class="ct-node"></span><span class="ct-trace"></span></span>
+            </label>
+            <span class="cielab-state" id="cielabStatus">ACTIVE</span>
+          </div>
+        </div>
+
+        <div class="ctrl-divider"><span>&#9670; SESSION PARAMETERS &#9670;</span></div>
+
+        <div class="ctrl-row ctrl-row--session">
+          <div class="hud-field">
+            <label class="hud-label" for="micSelect">INPUT DEVICE</label>
+            <select id="micSelect" class="hud-select"></select>
+          </div>
+          <div class="hud-field hud-field--xs">
+            <label class="hud-label" for="breathCount">CYCLES</label>
+            <select id="breathCount" class="hud-select">
+              <option value="10">x10</option>
+              <option value="15" selected>x15</option>
+              <option value="20">x20</option>
+              <option value="25">x25</option>
+            </select>
+          </div>
+          <div class="hud-field">
+            <label class="hud-label" for="musicSelect">AUDIO STREAM</label>
+            <select id="musicSelect" class="hud-select">
+              <option value="none">NULL</option>
+              <option value="assets/ohhm.mp3" selected>CALM MEDITATION</option>
+              <option value="assets/deep_relaxation.mp3">DEEP RELAXATION</option>
+              <option value="https://cdn.pixabay.com/audio/2022/08/23/audio_2e6d339bcc.mp3">PEACEFUL ZEN</option>
+              <option value="https://cdn.pixabay.com/audio/2023/02/28/audio_4dfed6d6c1.mp3">NATURE SYNC</option>
+            </select>
+          </div>
+          <div class="hud-field">
+            <label class="hud-label" for="musicVolume">GAIN -- <span id="volumeLabel">30%</span></label>
+            <div class="hud-range-wrap">
+              <input type="range" id="musicVolume" class="hud-range" min="0" max="100" value="30"/>
+              <div class="range-track-fill" id="rangeTrackFill" style="width:30%"></div>
+            </div>
+          </div>
+          <div class="ctrl-actions">
+            <button id="allowMicBtn" class="hud-btn hud-btn--sys">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+              MIC
+            </button>
+            <button id="allowCam" class="hud-btn hud-btn--sys">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              OPTICS
+            </button>
+            <button id="startBtn" class="hud-btn hud-btn--engage">
+              <span class="engage-fx"></span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              ENGAGE
+            </button>
+            <button id="stopBtn" class="hud-btn hud-btn--abort">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+              ABORT
+            </button>
+          </div>
+        </div>
+      </div>
+      <audio id="bgAudio" loop preload="auto" crossorigin="anonymous"></audio>
+      <span id="musicLoading" style="display:none;" class="music-loading">&#9676; BUFFERING STREAM</span>
+    </section>
+
+    <!-- ═══ ANALYTICS GRID ═══ -->
+    <div class="analytics-grid">
+
+      <!-- FACE CARD -->
+      <article class="hud-card" id="faceCard" data-card="FACIAL-ANALYTICS">
+        <div class="hc-corner hc-tl"></div><div class="hc-corner hc-tr"></div>
+        <div class="hc-corner hc-bl"></div><div class="hc-corner hc-br"></div>
+        <div class="hc-scanline"></div><div class="hc-edge-pulse"></div>
+        <div class="hc-header">
+          <div class="hc-title-block">
+            <div class="hc-icon cyan">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+            </div>
+            <div><div class="hc-title">FACIAL ANALYTICS</div><div class="hc-sub">REAL-TIME STATE DETECTION</div></div>
+          </div>
+          <div class="hc-badge-row">
+            <div class="hud-live-tag"><span class="pulse-ring"></span>LIVE</div>
+            <div class="hud-data-tag">FPS <span id="fps" class="mono-val">--</span></div>
+            <div class="hud-data-tag">FC <span id="facesDetected" class="mono-val">0</span></div>
+          </div>
+        </div>
+        <div id="faceWrap" class="face-viewport">
+          <div class="reticle" aria-hidden="true">
+            <div class="reticle-ring r1"></div><div class="reticle-ring r2"></div>
+            <div class="reticle-cross"></div>
+            <div class="reticle-corner rc-tl"></div><div class="reticle-corner rc-tr"></div>
+            <div class="reticle-corner rc-bl"></div><div class="reticle-corner rc-br"></div>
+            <div class="scan-sweep"></div>
+          </div>
+          <video class="input_video" autoplay playsinline muted></video>
+          <canvas class="output_canvas"></canvas>
+          <div class="viewport-overlay" aria-hidden="true">
+            <div class="vo-tl">OPTICS::FEED</div>
+            <div class="vo-tr" id="detectionState">SCANNING</div>
+            <div class="vo-bl">NITC.SNS.SYS</div>
+            <div class="vo-br" id="faceConfidence">CONF: --</div>
+          </div>
+        </div>
+        <div class="hc-metrics-row">
+          <div class="hud-metric" data-accent="cyan">
+            <div class="hm-label">EYE RELAX</div>
+            <div class="hm-value mono-val" id="eyeScoreTxt">000%</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="eyeBar" style="width:0%"></div><div class="hm-bar-glint"></div></div>
+          </div>
+          <div class="hud-metric" data-accent="amber">
+            <div class="hm-label">HEAD LOCK</div>
+            <div class="hm-value mono-val" id="headScoreTxt">000%</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="headBar" style="width:0%"></div><div class="hm-bar-glint"></div></div>
+          </div>
+          <div class="hud-metric" data-accent="ice">
+            <div class="hm-label">GAZE STABLE</div>
+            <div class="hm-value mono-val" id="gazeScoreTxt">000%</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="gazeBar" style="width:0%"></div><div class="hm-bar-glint"></div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- AUDIO CARD -->
+      <article class="hud-card" id="audioCard" data-card="AUDIO-ANALYTICS">
+        <div class="hc-corner hc-tl"></div><div class="hc-corner hc-tr"></div>
+        <div class="hc-corner hc-bl"></div><div class="hc-corner hc-br"></div>
+        <div class="hc-scanline"></div><div class="hc-edge-pulse"></div>
+        <div class="hc-header">
+          <div class="hc-title-block">
+            <div class="hc-icon amber">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div><div class="hc-title">AUDIO ANALYTICS</div><div class="hc-sub">BREATH PATTERN DECODER</div></div>
+          </div>
+          <div class="hc-badge-row">
+            <button id="muteBtn" class="hud-icon-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
+            </button>
+            <button id="refreshMics" class="hud-icon-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="wave-viewport">
+          <div class="wave-hud-overlay" aria-hidden="true">
+            <span class="wh-label">BREATH WAVEFORM -- CH-A</span>
+            <span class="wh-status">MONITORING</span>
+          </div>
+          <canvas id="waveCanvas"></canvas>
+          <div class="freq-bars" aria-hidden="true">
+            <div class="fb-label">FREQ SPECTRUM</div>
+            <div class="fb-bars">
+              <div class="fb-bar" style="--h:30%"></div><div class="fb-bar" style="--h:55%"></div>
+              <div class="fb-bar" style="--h:80%"></div><div class="fb-bar" style="--h:45%"></div>
+              <div class="fb-bar" style="--h:65%"></div><div class="fb-bar" style="--h:40%"></div>
+              <div class="fb-bar" style="--h:70%"></div><div class="fb-bar" style="--h:50%"></div>
+              <div class="fb-bar" style="--h:35%"></div><div class="fb-bar" style="--h:25%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hc-metrics-row two-col">
+          <div class="hud-metric" data-accent="amber">
+            <div class="hm-label">BREATH CONSTY</div>
+            <div class="hm-value mono-val" id="breathConsTxt">--</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="breathConsBar" style="width:0%"></div><div class="hm-bar-glint"></div></div>
+          </div>
+          <div class="hud-metric" data-accent="cyan">
+            <div class="hm-label">MIC AMPLITUDE</div>
+            <div class="hm-value mono-val" id="micLvl">--</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="micLvlBar" style="width:0%"></div><div class="hm-bar-glint"></div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- BREATHING CARD -->
+      <article class="hud-card breathing-card" id="breathCard" data-card="BREATH-MODULE">
+        <div class="hc-corner hc-tl"></div><div class="hc-corner hc-tr"></div>
+        <div class="hc-corner hc-bl"></div><div class="hc-corner hc-br"></div>
+        <div class="hc-scanline"></div><div class="hc-edge-pulse"></div>
+        <div class="hc-header">
+          <div class="hc-title-block">
+            <div class="hc-icon ice">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </div>
+            <div><div class="hc-title">BREATH MODULE</div><div class="hc-sub">NEURAL SYNC GUIDANCE</div></div>
+          </div>
+        </div>
+        <div class="breath-stage">
+          <div class="radar-ring rr-1"></div>
+          <div class="radar-ring rr-2"></div>
+          <div class="radar-ring rr-3"></div>
+          <div class="radar-sweep"></div>
+          <div class="radar-blip rb-1"></div>
+          <div class="radar-blip rb-2"></div>
+          <div class="radar-blip rb-3"></div>
+          <div id="breathingCircle" class="hud-heart"></div>
+          <div id="breathStatus" class="breath-readout" role="status" aria-live="polite">READY TO ENGAGE</div>
+        </div>
+        <div class="hud-progress-block">
+          <div class="hpb-header"><span>SESSION PROGRESS</span><span id="progressPct" class="mono-val">000%</span></div>
+          <div class="hpb-track">
+            <div class="hpb-fill" id="sessionMeter" style="width:0%"></div>
+            <div class="hpb-segments">
+              <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+              <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+              <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hrv-hud">
+          <div class="hrv-hud-header">
+            <div class="hrv-title-row">
+              <span class="hrv-icon-pulse">&#9829;</span>
+              <span class="hrv-title">CARDIAC MONITOR</span>
+            </div>
+            <div class="bpm-readout" id="bpmDisplay" aria-live="polite">
+              <span class="bpm-num">--</span><span class="bpm-unit">BPM</span>
+            </div>
+          </div>
+          <div class="hrv-metrics">
+            <div class="hrv-metric" data-accent="rose">
+              <div class="hm-label">HEART RATE</div>
+              <div class="hm-value mono-val" id="heartrateTxt">0 bpm</div>
+              <div class="hm-bar-track"><div class="hm-bar-fill" id="heartrateBar" style="width:0%"></div></div>
+            </div>
+            <div class="hrv-metric" data-accent="ice">
+              <div class="hm-label">SDNN</div>
+              <div class="hm-value mono-val" id="sdnnTxt">0 ms</div>
+              <div class="hm-bar-track"><div class="hm-bar-fill" id="sdnnBar" style="width:0%"></div></div>
+            </div>
+            <div class="hrv-metric" data-accent="cyan">
+              <div class="hm-label">RMSSD</div>
+              <div class="hm-value mono-val" id="rmssdTxt">0 ms</div>
+              <div class="hm-bar-track"><div class="hm-bar-fill" id="rmssdBar" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="signal-quality-hud">
+            <div class="sq-row">
+              <span class="sq-label">SIGNAL QUALITY</span>
+              <span id="signalQualityTxt" class="mono-val sq-val">WAITING</span>
+            </div>
+            <div class="sq-segmented-track">
+              <div class="sq-seg-fill" id="signalQualityBar"></div>
+              <div class="sq-segs"><span></span><span></span><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="hrv-advisory">&#9672; MAINTAIN STEADY POSTURE &middot; OPTIMAL LIGHTING</div>
+        </div>
+      </article>
+
+    </div><!-- /analytics-grid -->
+
+    <!-- ═══ RESULTS ═══ -->
+    <section class="hud-panel results-panel" data-hud-label="SESSION DEBRIEF" id="resultsSection">
+      <div class="hud-panel-inner">
         <div class="results-grid">
-            <div class="result-box">
-                <div class="header">
-                    <div class="label">Face Calmness</div>
-                    <div class="value" id="faceCalmTxt">—</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-fill" id="faceCalmBar" style="width:0%"></div>
-                </div>
-            </div>
-            <div class="result-box">
-                <div class="header">
-                    <div class="label">Breath Consistency</div>
-                    <div class="value" id="breathConsTxt2">—</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-fill" id="breathConsBar2" style="width:0%"></div>
-                </div>
-            </div>
-            <div class="result-box">
-                <div class="header">
-                    <div class="label">Meditation Index</div>
-                    <div class="value" id="meditationIndexTxt">—</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-fill" id="meditationIndexBar" style="width:0%"></div>
-                </div>
-            </div>
-            <div class="result-box">
-                <div class="header">
-                    <div class="label">Overall Score</div>
-                    <div class="value" id="overallTxt">—</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-fill" id="overallBar" style="width:0%"></div>
-                </div>
-            </div>
+          <div class="result-hud-card" data-accent="cyan">
+            <div class="rhc-glyph">&#9672;</div>
+            <div class="rhc-label">FACE CALMNESS</div>
+            <div class="rhc-value mono-val" id="faceCalmTxt">--</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="faceCalmBar" style="width:0%"></div></div>
+          </div>
+          <div class="result-hud-card" data-accent="amber">
+            <div class="rhc-glyph">&#9672;</div>
+            <div class="rhc-label">BREATH CONSTY</div>
+            <div class="rhc-value mono-val" id="breathConsTxt2">--</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="breathConsBar2" style="width:0%"></div></div>
+          </div>
+          <div class="result-hud-card" data-accent="ice">
+            <div class="rhc-glyph">&#9672;</div>
+            <div class="rhc-label">MEDITATION INDEX</div>
+            <div class="rhc-value mono-val" id="meditationIndexTxt">--</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="meditationIndexBar" style="width:0%"></div></div>
+          </div>
+          <div class="result-hud-card result-hud-card--primary" data-accent="cyan">
+            <div class="rhc-glyph">&#9672;</div>
+            <div class="rhc-label">OVERALL SCORE</div>
+            <div class="rhc-value mono-val" id="overallTxt">--</div>
+            <div class="hm-bar-track"><div class="hm-bar-fill" id="overallBar" style="width:0%"></div></div>
+          </div>
         </div>
+        <div class="debrief-note" id="overallNote" role="status" aria-live="polite"></div>
+      </div>
+    </section>
 
-        <div class="overall-note" id="overallNote"></div>
-    </div>
-
-    <!-- History -->
-    <div class="history-card">
-        <div class="card-title"><span>📈</span> Session History</div>
-        <table class="history-table">
-           <thead>
-  <tr>
-    <th>Date & Time</th>
-    <th>User Name</th>
-    <th>Profile (Age/Tone)</th>
-    <th>Duration</th>        
-    <th>BPM</th>             
-    <th>Face</th>
-    <th>Breath</th>
-    <th>Meditation</th>
-    <th>Overall</th>
-  </tr>
-</thead>
+    <!-- ═══ HISTORY ═══ -->
+    <section class="hud-panel history-panel" data-hud-label="MISSION LOG">
+      <div class="hud-panel-inner">
+        <div class="table-scroll">
+          <table class="hud-table">
+            <thead>
+              <tr>
+                <th>TIMESTAMP</th><th>OPERATOR</th><th>PROFILE</th>
+                <th>DURATION</th><th>BPM</th><th>FACE</th>
+                <th>BREATH</th><th>MEDITATION</th><th>SCORE</th>
+              </tr>
+            </thead>
             <tbody id="historyBody"></tbody>
-        </table>
-    </div>
-    <!-- Authenticity & Privacy Footer -->
-    <div
-        style="margin-top: 3rem; text-align: center; color: var(--text-secondary); font-size: 0.8rem; padding-bottom: 2rem;">
-        <div
-            style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(16, 185, 129, 0.1); padding: 0.5rem 1rem; border-radius: 999px; margin-bottom: 1rem; border: 1px solid rgba(16, 185, 129, 0.2);">
-            <span>🔒</span>
-            <strong>Privacy First:</strong> All analysis happens locally on your device. No video data is sent to
-            the cloud.
+          </table>
         </div>
-        <p style="max-width: 600px; margin: 0 auto; line-height: 1.6;">
-            <strong>Disclaimer:</strong> This application is a wellness tool designed for relaxation and meditation.
-            It is <em>not</em> a medical device and should not be used for diagnosis or treatment.
-            Heart rate and HRV metrics are estimates based on optical processing throughout the session.
-        </p>
-    </div>
-    </div>
+      </div>
+    </section>
 
-    <script src="app.js"></script>
-    <script>
-        const statusBadge = document.getElementById('statusBadge');
-        const sessionStatus = document.getElementById('sessionStatus');
-        const originalTextContent = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-        Object.defineProperty(sessionStatus, 'textContent', {
-            set: function (v) {
-                originalTextContent.set.call(this, v);
-                statusBadge.classList.toggle('active', v === 'running');
-            },
-            get: function () { return originalTextContent.get.call(this); }
-        });
-    </script>
+  </main>
+
+  <footer class="hud-footer">
+    <div class="footer-inner">
+      <div class="footer-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        ALL PROCESSING LOCAL &middot; ZERO CLOUD TRANSMISSION
+      </div>
+      <p class="footer-disclaimer">MINDFLOW is a wellness instrument &mdash; not a medical device. HRV &amp; BPM metrics are optical estimates. Not for clinical use.</p>
+    </div>
+  </footer>
+
+</div><!-- /app-shell -->
+
+<script src="app.js"></script>
+<script>
+/* STATUS BINDING */
+const statusBadge=document.getElementById('statusBadge');
+const sessionStatus=document.getElementById('sessionStatus');
+const _orig=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
+Object.defineProperty(sessionStatus,'textContent',{
+  set(v){_orig.set.call(this,v);statusBadge.classList.toggle('active',v==='running');},
+  get(){return _orig.get.call(this);}
+});
+
+/* BOOT SEQUENCE */
+(function boot(){
+  const overlay=document.getElementById('bootOverlay');
+  const titleEl=document.getElementById('bootTitle');
+  const logEl=document.getElementById('bootLog');
+  const fillEl=document.getElementById('bootFill');
+  const title='MINDFLOW v3.2';
+  const logs=['INITIALIZING NEURAL INTERFACE...','LOADING MEDIAPIPE FACE MESH...','CALIBRATING RPPG ENGINE...','MOUNTING AUDIO PROCESSORS...','ESTABLISHING HUD OVERLAY...','ALL SYSTEMS NOMINAL'];
+  let ti=0;
+  function typeTitle(){if(ti<title.length){titleEl.textContent+=title[ti++];setTimeout(typeTitle,55);}else{runLogs(0);}}
+  function runLogs(i){
+    if(i>=logs.length){gsap.to(fillEl,{width:'100%',duration:0.4,ease:'power2.in',onComplete:hideBoot});return;}
+    logEl.textContent='> '+logs[i];
+    gsap.to(fillEl,{width:((i+1)/logs.length*88)+'%',duration:0.3});
+    setTimeout(()=>runLogs(i+1),340);
+  }
+  function hideBoot(){
+    gsap.to(overlay,{opacity:0,duration:0.6,delay:0.2,ease:'power2.in',
+      onComplete:()=>{overlay.style.display='none';startMainAnims();}});
+  }
+  setTimeout(typeTitle,300);
+})();
+
+/* CLOCK */
+function updateClock(){
+  const n=new Date();
+  document.getElementById('hudClock').textContent=
+    String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
+}
+updateClock();setInterval(updateClock,1000);
+
+/* BACKGROUND PARTICLES */
+(function bgCanvas(){
+  const canvas=document.getElementById('bgCanvas');
+  const ctx=canvas.getContext('2d');
+  let W,H;
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const pts=Array.from({length:60},()=>({
+    x:Math.random()*2000,y:Math.random()*2000,
+    r:Math.random()*1.2+0.3,
+    dx:(Math.random()-.5)*0.2,dy:(Math.random()-.5)*0.2,
+    o:Math.random()*0.3+0.05
+  }));
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      ctx.beginPath();ctx.arc(p.x%W,p.y%H,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,245,212,'+p.o+')';ctx.fill();
+      p.x=(p.x+p.dx+W)%W;p.y=(p.y+p.dy+H)%H;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* GSAP MAIN ANIMATIONS */
+function startMainAnims(){
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.from('#hudHeader',{y:-100,opacity:0,duration:0.8,ease:'power3.out'});
+  gsap.from('.controls-panel',{y:50,opacity:0,duration:0.7,delay:0.2,ease:'power3.out'});
+  gsap.from('.hud-card',{
+    clipPath:'inset(100% 0% 0% 0%)',opacity:0,duration:0.8,
+    stagger:{each:0.18,from:'start'},delay:0.45,ease:'power3.out',
+    onComplete(){
+      document.querySelectorAll('.hud-card').forEach(c=>c.classList.add('card-ready'));
+      document.querySelectorAll('.hc-scanline').forEach(s=>s.classList.add('scan-active'));
+    }
+  });
+  ['#resultsSection','.history-panel'].forEach((s,i)=>{
+    gsap.from(s,{scrollTrigger:{trigger:s,start:'top 88%'},y:40,opacity:0,duration:0.7,delay:i*0.1,ease:'power3.out'});
+  });
+  gsap.from('.result-hud-card',{
+    scrollTrigger:{trigger:'.results-grid',start:'top 85%'},
+    scale:0.85,opacity:0,duration:0.55,stagger:{each:0.1},ease:'back.out(1.6)'
+  });
+}
+
+/* MICRO-INTERACTIONS */
+document.querySelectorAll('.hud-card').forEach(card=>{
+  const corners=card.querySelectorAll('.hc-corner');
+  card.addEventListener('mouseenter',()=>{
+    gsap.to(corners,{'--sz':'22px',duration:0.3,ease:'power2.out',stagger:0.04});
+    gsap.to(card,{boxShadow:'0 0 0 1px rgba(0,245,212,0.35),0 0 40px rgba(0,245,212,0.1)',duration:0.3});
+  });
+  card.addEventListener('mouseleave',()=>{
+    gsap.to(corners,{'--sz':'14px',duration:0.4,ease:'power2.inOut',stagger:0.03});
+    gsap.to(card,{boxShadow:'',duration:0.4});
+  });
+});
+
+document.querySelectorAll('.hud-btn,.hud-icon-btn').forEach(btn=>{
+  btn.addEventListener('click',function(e){
+    const r=this.getBoundingClientRect();
+    const ripple=document.createElement('span');
+    ripple.className='btn-ripple';
+    ripple.style.cssText='left:'+(e.clientX-r.left)+'px;top:'+(e.clientY-r.top)+'px;';
+    this.appendChild(ripple);
+    setTimeout(()=>ripple.remove(),600);
+  });
+  btn.addEventListener('mousemove',function(e){
+    const r=this.getBoundingClientRect();
+    gsap.to(this,{x:(e.clientX-r.left-r.width/2)*0.25,y:(e.clientY-r.top-r.height/2)*0.25,duration:0.25,ease:'power1.out'});
+  });
+  btn.addEventListener('mouseleave',function(){
+    gsap.to(this,{x:0,y:0,duration:0.4,ease:'elastic.out(1,0.5)'});
+  });
+});
+
+document.querySelectorAll('.hud-metric,.hrv-metric').forEach(m=>{
+  m.addEventListener('mouseenter',()=>gsap.to(m,{scale:1.04,duration:0.25,ease:'power2.out'}));
+  m.addEventListener('mouseleave',()=>gsap.to(m,{scale:1,duration:0.35,ease:'power2.inOut'}));
+});
+
+document.querySelectorAll('.result-hud-card').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    gsap.to(c,{rotateY:(e.clientX-r.left)/r.width*14-7,rotateX:-((e.clientY-r.top)/r.height*14-7),duration:0.3,transformPerspective:700});
+  });
+  c.addEventListener('mouseleave',()=>gsap.to(c,{rotateY:0,rotateX:0,duration:0.5,ease:'power2.out'}));
+});
+
+/* VOLUME */
+const vol=document.getElementById('musicVolume');
+const tfill=document.getElementById('rangeTrackFill');
+vol.addEventListener('input',function(){
+  document.getElementById('volumeLabel').textContent=this.value+'%';
+  if(tfill)tfill.style.width=this.value+'%';
+});
+
+/* CIELAB */
+document.getElementById('cielabToggle').addEventListener('change',function(){
+  const st=document.getElementById('cielabStatus');
+  st.textContent=this.checked?'ACTIVE':'BYPASS';
+  gsap.from(st,{opacity:0,x:5,duration:0.2});
+});
+
+/* PROGRESS MIRROR */
+const sm=document.getElementById('sessionMeter');
+if(sm){
+  const obs=new MutationObserver(()=>{
+    const w=sm.style.width||'0%';
+    const el=document.getElementById('progressPct');
+    if(el)el.textContent=String(parseInt(w)).padStart(3,'0')+'%';
+  });
+  obs.observe(sm,{attributes:true,attributeFilter:['style']});
+}
+
+/* FREQ BARS IDLE */
+(function animFreqBars(){
+  const bars=document.querySelectorAll('.fb-bar');
+  function r(){
+    bars.forEach(b=>{gsap.to(b,{'--h':(Math.random()*80+10)+'%',duration:0.3+Math.random()*0.4,ease:'power1.inOut'});});
+    setTimeout(r,250+Math.random()*300);
+  }
+  r();
+})();
+
+/* RADAR BLIPS */
+(function animBlips(){
+  document.querySelectorAll('.radar-blip').forEach(b=>{
+    function m(){
+      const a=Math.random()*Math.PI*2,d=Math.random()*55+15;
+      gsap.to(b,{x:Math.cos(a)*d,y:Math.sin(a)*d,opacity:1,duration:0.1,
+        onComplete:()=>gsap.to(b,{opacity:0,duration:0.8,delay:0.2,onComplete:m})});
+    }
+    setTimeout(m,Math.random()*2000);
+  });
+})();
+</script>
 </body>
-
 </html>
