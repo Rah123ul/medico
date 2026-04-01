@@ -11,7 +11,7 @@ export default function SetupSection({ onStartSession, multiplayer }) {
   const [selectedMic, setSelectedMic] = useState('');
   
   const [breathCount, setBreathCount] = useState('15');
-  const [music, setMusic] = useState(`${import.meta.env.BASE_URL}assets/ohhm.mp3`);
+  const [music, setMusic] = useState('assets/ohhm.mp3');
   const [volume, setVolume] = useState('30');
 
   // Multiplayer State
@@ -87,8 +87,8 @@ export default function SetupSection({ onStartSession, multiplayer }) {
     <div className="setup-section" id="setupSection">
       <div className="setup-left">
         <div className="setup-image-stack">
-          <img src={`${import.meta.env.BASE_URL}assets/images/nature-calm.png`} alt="Nature" className="setup-img setup-img--back" loading="lazy" />
-          <img src={`${import.meta.env.BASE_URL}assets/images/hero-meditation.png`} alt="Meditation" className="setup-img setup-img--front" loading="lazy" />
+          <img src="assets/images/nature-calm.png" alt="Nature" className="setup-img setup-img--back" loading="lazy" />
+<img src="assets/images/hero-meditation.png" alt="Meditation" className="setup-img setup-img--front" loading="lazy" />
         </div>
         <div className="setup-quote">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
@@ -219,8 +219,8 @@ export default function SetupSection({ onStartSession, multiplayer }) {
               <label className="field-label" htmlFor="musicSelect">Ambient Music</label>
               <select id="musicSelect" className="field-select" value={music} onChange={e => setMusic(e.target.value)}>
                 <option value="none">No music</option>
-                <option value={`${import.meta.env.BASE_URL}assets/ohhm.mp3`}>Calm Meditation</option>
-                <option value={`${import.meta.env.BASE_URL}assets/deep_relaxation.mp3`}>Deep Relaxation</option>
+                <option value="assets/ohhm.mp3">Calm Meditation</option>
+                <option value="assets/deep_relaxation.mp3">Deep Relaxation</option>
                 <option value="https://cdn.pixabay.com/audio/2022/08/23/audio_2e6d339bcc.mp3">Peaceful Zen</option>
                 <option value="https://cdn.pixabay.com/audio/2023/02/28/audio_4dfed6d6c1.mp3">Nature Sync</option>
               </select>

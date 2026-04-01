@@ -4,7 +4,7 @@ export default function HeroSection({ onScrollToSetup }) {
   return (
     <div className="hero-section" id="heroSection">
       <div className="hero-image-wrap">
-        <img src={`${import.meta.env.BASE_URL}assets/images/hero-meditation.png`} alt="Meditation at sunset" className="hero-image" />
+        <img src="assets/images/hero-meditation.png" alt="Meditation at sunset" className="hero-image" />
         <div className="hero-gradient-overlay"></div>
       </div>
       <div className="hero-content">
