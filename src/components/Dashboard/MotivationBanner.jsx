@@ -3,7 +3,7 @@ import React from 'react';
 export default function MotivationBanner({ onStart, onStop, onMute, isSessionRunning }) {
   return (
     <div className="motivation-banner" id="motivationBanner">
-      <img src="/assets/images/hands-meditation.png" alt="" className="banner-img" />
+      <img src={`${import.meta.env.BASE_URL}assets/images/hands-meditation.png`} alt="" className="banner-img" />
       <div className="banner-content">
         <span className="banner-tag">Today's Intention</span>
         <h2 className="banner-title">Find Your Center</h2>

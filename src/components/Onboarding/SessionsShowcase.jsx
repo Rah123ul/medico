@@ -11,7 +11,7 @@ export default function SessionsShowcase() {
 
       <div className="sessions-scroll">
         <div className="session-card" id="sCard1">
-          <img src="/assets/images/breathing-exercise.png" alt="Breathing" className="session-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/breathing-exercise.png`} alt="Breathing" className="session-img" loading="lazy" />
           <div className="session-card-body">
             <span className="session-duration">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -24,7 +24,7 @@ export default function SessionsShowcase() {
         </div>
 
         <div className="session-card" id="sCard2">
-          <img src="/assets/images/nature-calm.png" alt="Nature" className="session-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/nature-calm.png`} alt="Nature" className="session-img" loading="lazy" />
           <div className="session-card-body">
             <span className="session-duration">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -37,7 +37,7 @@ export default function SessionsShowcase() {
         </div>
 
         <div className="session-card" id="sCard3">
-          <img src="/assets/images/forest-meditation.png" alt="Forest" className="session-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/forest-meditation.png`} alt="Forest" className="session-img" loading="lazy" />
           <div className="session-card-body">
             <span className="session-duration">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -50,7 +50,7 @@ export default function SessionsShowcase() {
         </div>
 
         <div className="session-card" id="sCard4">
-          <img src="/assets/images/aurora-sleep.png" alt="Aurora" className="session-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/aurora-sleep.png`} alt="Aurora" className="session-img" loading="lazy" />
           <div className="session-card-body">
             <span className="session-duration">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>

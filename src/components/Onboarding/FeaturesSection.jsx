@@ -11,7 +11,7 @@ export default function FeaturesSection() {
 
       <div className="features-grid">
         <div className="feature-card feature-card--tall" id="feat1">
-          <img src="/assets/images/breathing-exercise.png" alt="Deep Breathing" className="feature-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/breathing-exercise.png`} alt="Deep Breathing" className="feature-img" loading="lazy" />
           <div className="feature-overlay">
             <div className="feature-badge">Breath Tracking</div>
             <h3 className="feature-title">Deep Breathing Analysis</h3>
@@ -20,7 +20,7 @@ export default function FeaturesSection() {
         </div>
 
         <div className="feature-card" id="feat2">
-          <img src="/assets/images/nature-calm.png" alt="Nature calm" className="feature-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/nature-calm.png`} alt="Nature calm" className="feature-img" loading="lazy" />
           <div className="feature-overlay">
             <div className="feature-badge">Ambient Sound</div>
             <h3 className="feature-title">Nature Soundscapes</h3>
@@ -29,7 +29,7 @@ export default function FeaturesSection() {
         </div>
 
         <div className="feature-card" id="feat3">
-          <img src="/assets/images/hands-meditation.png" alt="Meditation mudra" className="feature-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/hands-meditation.png`} alt="Meditation mudra" className="feature-img" loading="lazy" />
           <div className="feature-overlay">
             <div className="feature-badge">Heart Rate</div>
             <h3 className="feature-title">rPPG Cardiac Monitor</h3>
@@ -38,7 +38,7 @@ export default function FeaturesSection() {
         </div>
 
         <div className="feature-card feature-card--wide" id="feat4">
-          <img src="/assets/images/forest-meditation.png" alt="Forest meditation" className="feature-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/forest-meditation.png`} alt="Forest meditation" className="feature-img" loading="lazy" />
           <div className="feature-overlay">
             <div className="feature-badge feature-badge--gold">AI Powered</div>
             <h3 className="feature-title">Face & Gaze Tracking</h3>
@@ -47,7 +47,7 @@ export default function FeaturesSection() {
         </div>
 
         <div className="feature-card" id="feat5">
-          <img src="/assets/images/aurora-sleep.png" alt="Aurora northern lights" className="feature-img" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}assets/images/aurora-sleep.png`} alt="Aurora northern lights" className="feature-img" loading="lazy" />
           <div className="feature-overlay">
             <div className="feature-badge">CIELAB</div>
             <h3 className="feature-title">Skin-Tone Calibration</h3>

@@ -36,7 +36,7 @@ export default function DashboardScreen({ onBack, multiplayer }) {
     setIsSessionRunning(true);
     setSessionStatusText('running');
     if (bgAudioRef.current) {
-      bgAudioRef.current.src = localStorage.getItem('sns_session_music') || '/assets/ohhm.mp3';
+      bgAudioRef.current.src = localStorage.getItem('sns_session_music') || `${import.meta.env.BASE_URL}assets/ohhm.mp3`;
       const vol = localStorage.getItem('sns_session_volume') || '30';
       bgAudioRef.current.volume = Number(vol) / 100;
       if (bgAudioRef.current.src !== 'none') {
